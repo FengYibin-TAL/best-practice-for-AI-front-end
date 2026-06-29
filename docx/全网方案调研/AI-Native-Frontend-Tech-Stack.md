@@ -14,8 +14,17 @@
 1. **Stack Overflow 2025 Developer Survey**（官方调研，~7 万开发者样本）[^1]
 2. **GitHub / NPM Trends / LinkedIn 公开数据**（2026 年 1 月快照）[^2]
 3. **AI 平台官方文档与发布信息**（v0、Lovable、Bolt.new、Vercel AI SDK）
-4. **第三方技术博客与实测报告**（DEV Community、Vibe Coder Blog、XB Software、Vercel）
-5. **框架官方文档**（Vue.js Single File Component 章节、Tailwind LLM 文档）
+4. **第三方技术博客与实测报告**（DEV Community、Vibe Coder Blog、XB Software、Vercel、AdminLTE）
+5. **框架/库官方文档**（Vue.js SFC 章节、Tailwind LLM 文档、Ant Design LLMs 文档）
+
+### 已知调研偏见（必须诚实声明）
+
+| 偏见类型 | 表现 | 修正 |
+|---------|------|------|
+| **语言偏见** | 主要资料是英文，对中文社区共识覆盖不足 | v4.2 补全 Ant Design / Element Plus 数据 |
+| **平台幸存者偏见** | 跟着 v0/Lovable/Cursor 看，自然偏向它们输出的栈 | 在第七章明确分场景，不再说"X 库赢了" |
+| **地理偏见** | Western 工具被 AI 平台放大；亚洲工具被忽视 | 第七章新增"中国/亚洲市场"决策维度 |
+| **AI 主题幸存者偏见** | "为 AI 优化的工具"更容易出现在搜索结果里，可能漏掉做得好但低调的 | 持续待修正 |
 
 ### 写作约束
 
@@ -23,6 +32,7 @@
 - 不写"我觉得"、"应该会"、"推测"等表达
 - 删除了所有早期版本中无来源的部分（包括各种百分比、错误率、AI 拆分意愿等）
 - 报告以**事实+引用**为骨架，不夹带个人分析
+- **承认调研边界**：本报告不是完备的全球前端生态调研，凡是来源覆盖不到的领域（如 Solid.js、Qwik、Nuxt 等），不强行下结论
 
 ---
 
@@ -167,24 +177,73 @@
 
 ---
 
-## 第七章 - 组件库：shadcn/ui 在 AI 时代赢了 Material UI
+## 第七章 - 组件库对比：三个生态的真实数据
 
-### 7.1 Bundle 大小对比（真实数据）
+> **调研偏见声明**：本章 v4.1 之前只对比了 shadcn/ui vs Material UI，遗漏了 Ant Design（Alibaba）和 Element Plus（Vue 生态）。这是**英文资料偏见**的体现——v0/Lovable 都是 Vercel/西方公司产品，不会输出 AntD/Element。本版本（v4.2）补全。
 
-来源 [^14]（Vercel 官方对比）：
+### 7.1 三大 React 组件库真实数据（2026 年 3 月）
 
-| 指标 | shadcn/ui | Material UI |
-|-----|-----------|-------------|
-| 单组件 Bundle | 2-8 KB gzipped | 80-150 KB + 12 KB Emotion runtime |
-| 代码所有权 | 项目里（可改） | npm 包（黑盒） |
-| 样式系统 | Tailwind CSS | Emotion (CSS-in-JS) |
-| 设计基础 | Radix UI 原语 | Material Design 规范 |
-| AI 工具支持 | v0 默认输出 | 无专属 AI 工具 |
+来源 [^22]（AdminLTE 实测数据）：
 
-### 7.2 v0 的官方选择
+| 指标 | shadcn/ui | Material UI | Ant Design |
+|-----|-----------|-------------|-----------|
+| GitHub Stars | **109,413** | 98,062 | 97,758 |
+| Weekly NPM Downloads | 1.87M | **6.74M** | 2.43M |
+| 组件数量 | ~76 | 70+ (Core) + MUI X | 60+（全部免费） |
+| 同比增长率 | **~10x** | ~2.3x | ~1.5x |
+| npm 依赖数 | **0** | 12 | 48 |
+| 样式系统 | Tailwind CSS | Emotion / Pigment CSS | CSS-in-JS (cssinjs) |
+| 运行时开销 | **零运行时** | Emotion runtime | cssinjs runtime |
+| Bundle（参考） | 2-8 KB / 组件 [^14] | 300KB+ minified [^15] | ~500KB [^15] |
 
-来源 [^14] 原文：
-> "v0, Vercel's AI app builder, generates UI using shadcn/ui... shadcn/ui is the stronger fit when v0 and AI-assisted workflows are part of how the UI gets built."
+**关键观察**：
+- Ant Design 的 GitHub Stars 与 Material UI **基本持平**（97.7k vs 98k）
+- Ant Design 周下载量（2.43M）**超过** shadcn/ui（1.87M）
+- 三个库都是真实主流选择，**不能因为不熟就忽略**
+
+### 7.2 Ant Design 的 AI 友好度被严重低估
+
+来源 [^23]（Ant Design 官方 LLM 文档）：
+
+Ant Design 提供 **6 个 LLMs.txt 文件**（比 Tailwind 还多）：
+
+1. `llms.txt` — 导航索引
+2. `design.md` — 设计语言描述（Google Labs 格式兼容）
+3. `llms-full.txt` — 完整英文文档
+4. `llms-full-cn.txt` — **完整中文文档**
+5. `llms-semantic.md` — 英文语义描述（含 DOM 结构）
+6. `llms-semantic-cn.md` — 中文语义描述
+
+来源 [^23] 列出官方支持的 **9 个 AI IDE**：
+- Cursor、Windsurf、Claude Code、Codex、Gemini CLI、Trae、Qoder、Neovate Code、Qwen Code
+
+每个 IDE 都有专属配置指引。这是迄今为止**最全面的组件库 LLM 适配**。
+
+来源 [^24]（Ant Design X 官方）：
+> "@ant-design/x-skill is an intelligent skill library specifically designed for Ant Design X that provides Agent skills to significantly enhance development efficiency and help build high-quality AI conversation applications."
+
+**含义**：Ant Design 已经把"AI 友好"做成一等公民，不仅有 llms.txt，还有专门为 AI Agent 设计的 skill 库。这与 shadcn/ui 的"v0 默认输出"是不同维度的优势。
+
+### 7.3 Element Plus（Vue 生态）
+
+来源 [^25]：
+- GitHub Stars：23.7k
+- Vue 3 基础
+- 有 **Element Plus X**（企业级 AI 组件库扩展）
+- 有 **AI Elements Vue**（基于 shadcn-vue 的 AI 应用组件库）
+
+如果项目是 Vue 栈，Element Plus + Element Plus X 是 AntD 的对应选择。
+
+### 7.4 选型建议（基于场景，不基于偏好）
+
+| 场景 | 推荐 | 理由 |
+|-----|------|------|
+| **西方市场 / 创业项目 / 设计驱动** | shadcn/ui | v0 默认输出、零运行时、设计自由度高 |
+| **中国 / 亚洲市场 / 数据密集 B2B** | **Ant Design** | 6 个 LLMs.txt、9 个 AI IDE 集成、48 个免费企业组件、中文文档完整 |
+| **Material Design 强制需求** | Material UI | Google 设计规范、~98k stars 仍主流 |
+| **Vue 栈 + 企业应用** | Element Plus + Element Plus X | 中文社区活跃、AI 扩展齐全 |
+
+**重要修正**：本调研之前的"shadcn/ui 在 AI 时代赢了"是**带偏见的过度概括**。准确表述是：**shadcn/ui 在英文主流 AI 平台（v0/Lovable）生态里赢了**，但 Ant Design 在 AI 友好度的另一个维度（官方 LLM 文档完整度 + 多 IDE 集成）甚至**更深**。两者服务不同市场。
 
 ---
 
@@ -232,16 +291,25 @@
 
 ---
 
-## 第十章 - 不推荐的选择（基于数据，不基于偏好）
+## 第十章 - 选型决策矩阵（按场景，非"不推荐"清单）
 
-| 不推荐选择 | 数据依据 | 来源 |
-|----------|---------|------|
-| **Vue SFC（新项目）** | template-syntax SFC 比 JSX 产生更多 AI 失误 | [^9] |
-| **Material UI（新项目）** | 无专属 AI 工具支持；Bundle 比 shadcn/ui 大 10-20x | [^14] |
-| **Svelte（除非有强烈偏好）** | v0/Lovable 不支持；US 仅 265 个岗位 | [^2][^4][^5] |
-| **Create React App** | 已被 React 官方弃用，无 Server Components |  React 官方公告 |
+v4.1 之前的"不推荐"表过于武断。本版改为**按场景的决策矩阵**：
 
-注：**已在用上述技术的项目**不一定要迁移，迁移成本需评估。本表仅针对**新项目选型**。
+| 维度 | 西方市场 / 创业 / 设计驱动 | 中国/亚洲市场 / 企业 B2B | 强制 Material Design | Vue 栈 |
+|-----|--------------------------|----------------------|-------------------|-------|
+| 框架 | React + Next.js | React + Next.js | React + Next.js | Vue 3 + Composition API |
+| 组件库 | **shadcn/ui** | **Ant Design** | Material UI | Element Plus + Element Plus X |
+| 样式 | Tailwind | Tailwind 或 cssinjs | Emotion | Tailwind |
+| AI 工具 | v0、Cursor | Cursor + AntD llms.txt | Cursor | Cursor + Element Plus X |
+| 来源 | [^4][^14] | [^22][^23] | [^14] | [^25] |
+
+### 仅有的硬性"不建议新项目用"
+
+| 选择 | 数据依据 | 来源 |
+|-----|---------|------|
+| **Create React App** | 已被 React 官方弃用，无 Server Components | React 官方公告 |
+
+注：**已在用其他技术的项目**不一定要迁移，迁移成本需评估。本表仅针对**新项目选型**。
 
 ---
 
@@ -292,6 +360,20 @@ https://www.digitalapplied.com/blog/nextjs-16-ai-integration-patterns-guide
 [^19]: **Vercel Official. AI SDK UI: Chatbot**
 https://ai-sdk.dev/docs/ai-sdk-ui/chatbot
 
+[^22]: **AdminLTE. shadcn/ui vs MUI vs Ant Design (2026)**
+https://adminlte.io/blog/shadcn-ui-vs-mui-vs-ant-design/
+
+[^23]: **Ant Design Official. LLMs.txt Documentation**
+https://ant.design/docs/react/llms/
+
+[^24]: **Ant Design X. Introduction and AI Skills**
+https://x.ant.design/x-skills/introduce/
+
+[^25]: **Element Plus Official + Element Plus X**
+- https://element-plus.org/
+- https://github.com/element-plus-x/Element-Plus-X
+- https://github.com/vuepont/ai-elements-vue
+
 ---
 
 ## 修订记录
@@ -302,7 +384,8 @@ https://ai-sdk.dev/docs/ai-sdk-ui/chatbot
 | v2.0 | 改为 AI 友好度视角（仍含编造） | 已废弃 |
 | v3.0 | 加入真实来源（仍含个人分析章节） | 已废弃 |
 | v4.0 | 删除臆想章节、引入可视化图 | 已废弃 |
-| **v4.1** | **本版**：删除"内部规范对齐"段（夹带，污染调研中立性） | **现行** |
+| v4.1 | 删除"内部规范对齐"段（夹带污染） | 已废弃 |
+| **v4.2** | **本版**：补全 Ant Design + Element Plus 对比（修正英文资料偏见），改"不推荐表"为"决策矩阵" | **现行** |
 
 ---
 
