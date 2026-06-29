@@ -1,0 +1,21 @@
+flowchart TB
+    Stack["AI 时代推荐前端技术栈"]
+
+    Stack --> Core["核心层"]
+    Stack --> StyleLayer["样式层"]
+    Stack --> DataLayer["数据/AI 层"]
+
+    Core --> NJS["Next.js 16+<br/>(App Router)"]
+    Core --> R["React 18+"]
+    Core --> TS["TypeScript strict"]
+
+    StyleLayer --> TW["Tailwind CSS<br/>(官方 llms.txt)"]
+    StyleLayer --> SC["shadcn/ui<br/>(v0 默认输出)"]
+
+    DataLayer --> SDK["Vercel AI SDK 5<br/>(useChat + SSE)"]
+    DataLayer --> RQ["React Query<br/>(可选, 客户端缓存)"]
+
+    style Stack fill:#fef3c7,stroke:#d97706,stroke-width:3px
+    style Core fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+    style StyleLayer fill:#fce7f3,stroke:#be185d,stroke-width:2px
+    style DataLayer fill:#d1fae5,stroke:#059669,stroke-width:2px

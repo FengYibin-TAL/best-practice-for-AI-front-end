@@ -1,0 +1,18 @@
+flowchart TD
+    AI["主流 AI 前端生成平台"]
+    AI --> V0["v0.app<br/>(Vercel)"]
+    AI --> LV["Lovable"]
+    AI --> BN["Bolt.new<br/>(StackBlitz)"]
+
+    V0 --> S1["默认: Next.js + React<br/>+ Tailwind + shadcn/ui"]
+    LV --> S2["默认: React + TS<br/>+ Vite + Tailwind"]
+    BN --> S3["多框架支持<br/>React 是默认"]
+
+    S1 --> Conclusion["✅ React + Tailwind 是<br/>3 个平台的共同选择"]
+    S2 --> Conclusion
+    S3 --> Conclusion
+
+    style V0 fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+    style LV fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+    style BN fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+    style Conclusion fill:#d1fae5,stroke:#059669,stroke-width:3px
