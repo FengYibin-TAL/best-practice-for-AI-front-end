@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+    background: #f8fafc;
+    padding: 40px 48px 48px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 32px;
+    letter-spacing: 0.02em;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  .panel {
+    border-radius: 14px;
+    padding: 24px 22px 20px;
+  }
+  .panel.green { background: #f0fdf4; border: 1.5px solid #86efac; }
+  .panel.red   { background: #fff1f2; border: 1.5px solid #fca5a5; }
+  .panel-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel.green .panel-title { color: #166534; }
+  .panel.red   .panel-title { color: #991b1b; }
+  .card {
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .card:last-child { margin-bottom: 0; }
+  .panel.green .card { background: #dcfce7; border: 1px solid #86efac; }
+  .panel.red   .card { background: #ffe4e6; border: 1px solid #fca5a5; }
+  .card-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .panel.green .card-title { color: #14532d; }
+  .panel.red   .card-title { color: #7f1d1d; }
+  .card-desc {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #475569;
+  }
+  .num {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 20px;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .panel.green .num { background: #16a34a; color: #fff; }
+  .panel.red   .num { background: #dc2626; color: #fff; }
+  .card-header { display: flex; align-items: center; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<h1>AI 时代前端代码写法指南</h1>
+<div class="grid">
+  <!-- 左：推荐 -->
+  <div class="panel green">
+    <div class="panel-title">✅ 推荐写法（AI 友好）</div>
+
+    <div class="card">
+      <div class="card-header"><span class="num">1</span><span class="card-title">函数组件 · 单文件单职责</span></div>
+      <div class="card-desc">纯函数无类，每个组件独立文件。AI 每次读写范围有限，不会产生上下文污染。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="num">2</span><span class="card-title">Tailwind 原子类</span></div>
+      <div class="card-desc">样式即文档，无运行时，无隐藏逻辑。AI 直接读 className 即可推断视觉效果。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="num">3</span><span class="card-title">copy-in 组件（shadcn 模式）</span></div>
+      <div class="card-desc">组件源码在仓库里，AI 可直读直改。黑盒 npm 包内部逻辑 AI 无法触达。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="num">4</span><span class="card-title">最小化 useEffect</span></div>
+      <div class="card-desc">副作用显式声明，不隐藏在库的内部生命周期中。AI 能完整追踪数据流。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="num">5</span><span class="card-title">TypeScript 类型驱动</span></div>
+      <div class="card-desc">接口即契约，AI 看类型即知数据结构，减少猜测，提升修改精准度。</div>
+    </div>
+  </div>
+
+  <!-- 右：风险 -->
+  <div class="panel red">
+    <div class="panel-title">⚠️ 风险写法（AI 追加膨胀）</div>
+
+    <div class="card">
+      <div class="card-header"><span class="num">1</span><span class="card-title">Runtime CSS-in-JS（sx / emotion）</span></div>
+      <div class="card-desc">样式分散在 sx prop 里，AI 每次修改都倾向追加新属性，文件持续膨胀，难以审查。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="num">2</span><span class="card-title">Vue SFC 大文件</span></div>
+      <div class="card-desc">script + template + style 三段合一。AI 生成时倾向在末尾追加，单文件行数快速增长。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="num">3</span><span class="card-title">黑盒组件库深定制</span></div>
+      <div class="card-desc">MUI / AntD 内部逻辑 AI 无法修改，遇到限制只能堆 workaround，代码越来越脆。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="num">4</span><span class="card-title">隐式全局状态</span></div>
+      <div class="card-desc">Context / Provide-Inject 跨层传递，AI 修改局部代码时难以感知全局影响范围。</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

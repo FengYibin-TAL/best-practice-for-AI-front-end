@@ -1,0 +1,19 @@
+flowchart TB
+    Q["2026: AI 友好度 = 可验证的已发布功能<br/>(官方 MCP Server + llms.txt)"]
+
+    Q --> SH["shadcn/ui"]
+    Q --> AD["Ant Design"]
+    Q --> SV["Svelte"]
+
+    SH --> SH1["官方 MCP (CLI 3.0, 2025-08)<br/>llms.txt 自称 AI-Ready<br/>配置: Claude Code/Cursor/Copilot/Codex"]
+    AD --> AD1["官方 MCP: antd mcp<br/>8 tools + 2 prompts<br/>集成 9 个 AI 客户端<br/>llms-full-cn.txt 中文文档"]
+    SV --> SV1["官方 MCP: @sveltejs/mcp (2025-11)<br/>含 svelte-autofixer 静态纠错<br/>插件: Claude Code/Cursor/OpenCode"]
+
+    SH1 --> C["关键结论:<br/>中文生态(Ant Design)的 AI 工具<br/>与西方(shadcn/ui)处于同一水平<br/>组件库层无英文资料偏见"]
+    AD1 --> C
+    SV1 --> C
+
+    style Q fill:#fef3c7,stroke:#d97706,stroke-width:3px
+    style C fill:#d1fae5,stroke:#059669,stroke-width:3px
+    style AD fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+    style AD1 fill:#fee2e2,stroke:#dc2626,stroke-width:2px

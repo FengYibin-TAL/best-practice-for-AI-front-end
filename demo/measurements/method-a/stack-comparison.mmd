@@ -1,0 +1,25 @@
+flowchart LR
+  subgraph "① React+shadcn/Tailwind"
+    A1["Bundle: 64KB gz ✅"]
+    A2["LOC: 662 ✅"]
+    A3["AI文档: llms.txt ✅"]
+    A4["可维护性: 高 ✅"]
+  end
+  subgraph "② Vue3+Tailwind"
+    B1["Bundle: 30KB gz 🏆"]
+    B2["LOC: 733 ✅"]
+    B3["AI文档: Vue llms.txt ✅"]
+    B4["SFC单文件风险: ⚠️"]
+  end
+  subgraph "③ React+MUI"
+    C1["Bundle: 108KB gz ⚠️"]
+    C2["LOC: 904 ⚠️"]
+    C3["AI文档: llms.txt 404 ❌"]
+    C4["sx prop冗余 ⚠️"]
+  end
+  subgraph "④ React+AntD"
+    D1["Bundle: 150KB gz ❌"]
+    D2["LOC: 1183 ❌"]
+    D3["AI文档: 6个llms.txt+MCP ✅"]
+    D4["样式覆盖复杂 ⚠️"]
+  end

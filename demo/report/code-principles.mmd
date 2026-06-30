@@ -1,0 +1,25 @@
+flowchart LR
+  subgraph "✅ AI 时代代码写法要点"
+    P1["1. 函数组件\n纯函数 无类\n每组件单文件"]
+    P2["2. Tailwind 原子类\n样式即文档\n无运行时无隐藏逻辑"]
+    P3["3. copy-in 组件\n代码在仓库\nAI可直读直改"]
+    P4["4. 最小化 useEffect\n副作用显式\n不隐藏在库内"]
+    P5["5. TS 类型驱动\n接口即契约\nAI看类型知结构"]
+    P1 --> P2 --> P3 --> P4 --> P5
+  end
+  subgraph "⚠️ AI时代风险写法"
+    N1["runtime CSS-in-JS\nsx/emotion上下文依赖"]
+    N2["Vue SFC 大文件\n三段混合AI追加风险"]
+    N3["黑盒组件库\n内部逻辑AI无法修改"]
+    N4["隐式全局状态\n上下文依赖难追踪"]
+    N1 -.- N2 -.- N3 -.- N4
+  end
+  style P1 fill:#d1fae5
+  style P2 fill:#d1fae5
+  style P3 fill:#d1fae5
+  style P4 fill:#d1fae5
+  style P5 fill:#d1fae5
+  style N1 fill:#fee2e2
+  style N2 fill:#fee2e2
+  style N3 fill:#fee2e2
+  style N4 fill:#fee2e2

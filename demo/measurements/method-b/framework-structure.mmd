@@ -1,0 +1,33 @@
+flowchart LR
+  subgraph "React+Tailwind 文件结构"
+    R1["App.tsx\n145 LOC"]
+    R2["DragFillStar.tsx\n95 LOC"]
+    R3["FlipMatchStar.tsx\n63 LOC"]
+    R4["HotspotStar.tsx\n46 LOC"]
+    R5["QuizStar.tsx\n46 LOC"]
+    R6["ModalStack.tsx\n66 LOC"]
+    R7["Confetti/Header/Nav\n~103 LOC"]
+    R8["data+lib\n91 LOC"]
+    R1 --- R2
+    R1 --- R3
+    R1 --- R4
+    R1 --- R5
+    R1 --- R6
+    R1 --- R7
+  end
+  subgraph "Vue3 SFC 文件结构"
+    V1["App.vue\n175 LOC\nscript+template+style"]
+    V2["DragFillStar.vue\n113 LOC"]
+    V3["FlipMatchStar.vue\n77 LOC"]
+    V4["HotspotStar.vue\n46 LOC"]
+    V5["QuizStar.vue\n46 LOC"]
+    V6["ModalStack.vue\n67 LOC"]
+    V7["Confetti/Header/Nav\n~113 LOC"]
+    V8["data+lib\n91 LOC"]
+    V1 --- V2
+    V1 --- V3
+    V1 --- V4
+    V1 --- V5
+    V1 --- V6
+    V1 --- V7
+  end

@@ -1,0 +1,13 @@
+flowchart TD
+  START["新建 AI 时代前端项目"] --> Q1{"需要复杂组件库？\n（企业中后台 / 现有规范）"}
+  Q1 -->|否| Q2{"框架偏好？"}
+  Q1 -->|MUI规范| MUI["③ React + MUI\n108KB / 904 LOC\nAI文档：❌ llms.txt 404"]
+  Q1 -->|AntD规范| ANTD["④ React + AntD\n150KB / 1183 LOC\nAI文档：✅ 6个llms.txt+MCP"]
+  Q2 -->|React| BEST["① React+Tailwind+shadcn\n64KB / 662 LOC\n🏆 AI时代首选"]
+  Q2 -->|Vue| VUE["② Vue3+Tailwind+shadcn-vue\n29KB / 733 LOC\n✅ 轻量替代"]
+  BEST --> WARN1["注意：需验证迭代膨胀\n是否符合预期"]
+  VUE --> WARN2["注意：SFC迭代膨胀\n待Method B实验验证"]
+  style BEST fill:#d1fae5,stroke:#059669
+  style VUE fill:#dbeafe,stroke:#2563eb
+  style MUI fill:#fef9c3,stroke:#ca8a04
+  style ANTD fill:#fee2e2,stroke:#dc2626

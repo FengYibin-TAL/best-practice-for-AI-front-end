@@ -1,0 +1,22 @@
+flowchart LR
+    subgraph PROVEN["✅ 有硬数据支撑（已验证）"]
+        P1["React 下载量 ~146M/周<br/>npm API 实测"]
+        P2["MCP/llms.txt 存在性<br/>官方文档实证"]
+        P3["类型约束解码降编译错误 >50%<br/>arXiv 同行评审"]
+        P4["v0/Lovable 默认输出 React+Tailwind+shadcn<br/>厂商官方博客"]
+    end
+
+    subgraph INFER["⚠️ 合理推断（非直接测量）"]
+        I1["下载量大 → 训练数据多 → 生成质量高"]
+        I2["Tailwind 提升编译成功率 47%→92%<br/>仅单个 7B 模型, 1 项研究"]
+    end
+
+    subgraph GAP["❌ 证据缺口（无人做过）"]
+        G1["跨组件库的生成质量对比基准<br/>(shadcn vs MUI vs AntD)"]
+        G2["跨框架的生成质量对比<br/>(React vs Vue vs Svelte)"]
+        G3["写 TS(非约束解码)是否真的提升前端 AI 代码"]
+    end
+
+    style PROVEN fill:#d1fae5,stroke:#059669,stroke-width:2px
+    style INFER fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style GAP fill:#fee2e2,stroke:#dc2626,stroke-width:2px
