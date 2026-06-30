@@ -221,26 +221,98 @@
 
 ## 第十章 - 架构：单体 SPA 与微前端
 
-### 10.1 核心对比
+> **调研方法说明**：本章基于对抗性多轮验证（105 个搜索/验证 agent，864 次工具调用），所有声明均标注验证结论（✅ 通过 / ⚠️ 争议 / ❌ 被否决）。被否决的声明同样列出，以防止对微前端框架文档的过度解读。
+
+### 10.1 微前端的核心动机（高置信度）
+
+**微前端解决的问题**：微服务后端 + 前端单体的**架构失配**。
+
+Thoughtworks Technology Radar 原文[^26]：
+
+> "Teams adopting microservices often still build a front-end monolith — a large browser application on top of backend services — which undermines the microservices benefits."
+
+Martin Fowler 的规范定义[^31]：每个微前端应有独立的 CI/CD 流水线，**前后端垂直切割**，各团队独立开发、测试、部署。
+
+**这个动机与 AI 辅助开发无关**——它是组织架构问题，不是代码生成质量问题。
+
+### 10.2 全维度对比
 
 | 维度 | 单体 SPA | 微前端 |
 |------|----------|--------|
-| **主要解决的问题** | 交付简单、体验一致 | 多团队并行、独立发布 |
-| **AI 平台默认产出** | ✅ v0/Lovable/Bolt 默认 | ❌ 不默认 |
-| **运行时开销** | 无集成层 | 壳加载、沙箱、跨应用通信 |
-| **构建速度（单案例）** | 10.7s | 113.8s [^28] |
-| **AI 编码适配** | 单一入口，与 llms.txt 工作流一致 | 多子应用契约，协调成本高 |
+| **解决的核心问题** | 交付简单、体验一致 | 多团队独立发布 |
+| **AI 平台默认产出** | ✅ v0/Lovable/Bolt 全部默认 | ❌ 无一默认输出 |
+| **构建速度** | 10.7s（基准） | 113.8s（+960%）[^28] |
+| **运行时开销** | 无集成层 | 壳加载 + 沙箱 + 跨应用通信 |
+| **版本漂移风险** | ✅ 构建时锁定，无风险 | ⚠️ 运行时共享库不兼容是主要故障来源[^32] |
+| **独立部署** | ❌ 全量发布 | ✅ 子应用独立上线 |
+| **遗留系统迁移** | ❌ 需整体重写 | ✅ 可共存（single-spa 支持多框架同页）[^33] |
+| **AI 编码上下文** | 单一代码库，AI 上下文完整 | 跨子应用边界，AI 上下文断裂（开放问题，无实证）|
+| **团队协作** | 小团队协作成本低 | 大型组织多团队并行，边界清晰 |
 
-**含义**：微前端解决的是**组织与发布边界**，不是"AI 生成质量"问题。AI 辅助开发的新项目，若无多团队独立发布或异构遗留诉求，**默认选单体 SPA**。
+### 10.3 主流微前端框架对比（2024-2026）
 
-### 10.2 场景选型
+| 框架 | 架构思路 | 隔离机制 | 适用场景 | 验证状态 |
+|------|---------|---------|---------|---------|
+| **Module Federation** (Webpack/Rspack) | 运行时模块共享 | 无内置沙箱 | 技术栈统一的大型工程 | ✅ webpack 官方[^32] |
+| **qiankun** | HTML Entry + 路由注册 | JS Proxy 沙箱 | 阿里系/国内主流 | ⚠️ 沙箱声明 1-2 争议 |
+| **single-spa** | 路由级别注册 | 无内置沙箱 | 多框架共存/渐进迁移 | ✅ 官方文档[^33] |
+| **micro-app（京东）** | 类 Web Component + Proxy | CustomElements + Proxy | 组件思维集成 | ✅ GitHub[^34] |
+| **Wujie** | iframe JS + WebComponent DOM | 原生 iframe 隔离 | 强隔离需求 | ❌ 多项声明被否决 |
 
-| 场景 | 建议 |
-|------|------|
-| 新项目 + AI 生成为主 + 无强制独立发布 | **单体 SPA** |
-| 多团队、子系统需独立发布、域边界清晰 | **微前端** |
+**关于 qiankun 的注意**：qiankun JS 沙箱隔离声明（`with(proxyWindow)` 方式）在验证中以 1-2 通过，说明其沙箱存在已知局限——并非如官方文档所描述的"完全隔离"。
+
+**关于 Module Federation 的注意**：以下声明在验证中**被否决**（❌）：
+- "子应用无需重新部署即可更新"（0-3 否决）——实践中消费方通常仍需验证/重新部署
+- "每页可独立部署，只有路由变更时才需重新部署 shell"（0-3 否决）
+
+### 10.4 AI-native 场景下的架构选型
+
+#### AI 工具链偏好哪个架构？
+
+**诚实结论：证据不足，无法得出强结论。**
+
+研究过程中所有"AI 工具链偏好微前端/SPA"的声明在三轮对抗性验证中全部被否决（0-3 或 1-2），原因是**缺乏一手来源**。这是本次调研的重要**负面发现**，而非回避。
+
+目前可以确认的事实：
+- v0、Lovable、Bolt.new 的**默认输出**均为单体 SPA（React + Next.js），无一生成微前端架构[^26 applied]
+- AI 辅助编码工具（Cursor、Copilot）在跨微前端边界时是否存在上下文断裂，**属于 2025-2026 年开放研究问题**，无可信实证数据
+
+#### 选型决策树
+
+```
+新项目 / AI 生成为主？
+    └── YES → 默认单体 SPA
+              （路由懒加载解决「太大」的问题）
+
+多团队 + 真实独立发布需求？
+    └── YES → 微前端（qiankun / Module Federation / micro-app）
+              （但注意版本漂移风险，需要严格的共享依赖治理）
+
+遗留系统 + 新旧技术栈必须共存？
+    └── YES → single-spa（唯一经验证的多框架同页方案）
+
+「代码量大想拆」但没有独立发布需求？
+    └── 单体 SPA + 路由懒加载（微前端在此场景引入复杂度但无收益）
+```
+
+### 10.5 核心结论
+
+**微前端的价值是组织边界，不是代码质量。** 三条经过验证的结论：
+
+1. **微前端适合条件**：多团队、独立 CI/CD、前后端垂直团队切割——这些条件在 AI 生成的 greenfield 项目中通常**不存在**
+2. **最大运行时风险**：版本漂移——多子应用独立部署后共享库版本不一致，是已知主要故障来源（Nx 文档实证[^32]）
+3. **AI 工具链影响**：当前无可信证据，是开放研究问题——任何"AI 偏好 SPA"或"AI 偏好微前端"的强结论均属过度推断
+
+### 10.6 场景速查
+
+| 场景 | 建议架构 |
+|------|---------|
+| 新项目 + AI 生成为主 + 单团队 | **单体 SPA** |
+| 多团队、子系统需独立发布 | **微前端**（qiankun 或 Module Federation） |
 | 仅「代码量大、想拆一下」 | **单体 SPA**（路由懒加载） |
-| 遗留 Vue2 + 新 React 必须共存 | **微前端** |
+| 遗留 Vue2 + 新 React 必须共存 | **single-spa** |
+| 强隔离需求（第三方嵌入等） | **micro-app 或 iframe 方案** |
+| MVP / 创业早期 | **单体 SPA**（微前端的组织收益在小团队为负） |
 
 ---
 
@@ -304,6 +376,10 @@
 [^28]: IJCSMC 2026. Comparative Study of Micro-Frontend and Modular Monolith — https://doi.org/10.47760/ijcsmc.2026.v15i02.006
 [^29]: Module.today. The Case Against Micro-Frontends — https://www.module.today/software-engineering/the-case-against-micro-frontends-critique
 [^30]: Fishtank. The future of AI, DXP platforms, and micro frontends — https://www.getfishtank.com/insights/the-future-of-ai-dxp-platforms-and-micro-frontends
+[^31]: Martin Fowler. Micro Frontends — https://martinfowler.com/articles/micro-frontends.html
+[^32]: Nx. Micro Frontend Architecture — https://nx.dev/concepts/more-concepts/micro-frontend-architecture
+[^33]: single-spa. Getting Started Overview — https://single-spa.js.org/docs/getting-started-overview/
+[^34]: micro-app (京东). GitHub — https://github.com/jd-opensource/micro-app
 
 ---
 
@@ -314,6 +390,7 @@
 | v1.0–v4.4 | 历次修订（含删除编造数据、补全AntD、修正偏见等） |
 | **v4.5** | 新增单体SPA vs 微前端对比；决策矩阵加架构行 |
 | **v4.6** | 图文并茂优化：6张图全部重做为暖色橙棕统一风格 |
+| **v4.7** | 第十章大幅扩充：微前端深度调研（105 agent 对抗性验证）；新增框架对比表、AI-native 选型决策树、被否决声明清单 |
 
 ---
 

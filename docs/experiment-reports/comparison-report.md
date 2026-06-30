@@ -1,8 +1,8 @@
-# 4 技术栈对比报告（复杂版 v2）
+# 5 技术栈对比报告（含微前端架构）
 
 > 实现日期：2026-06-30  
 > 功能：Epic Labs 复杂 demo（3关/4星型：drag-fill+flip-match+hotspot+quiz/Modal栈/localStorage/彩带/badge）  
-> 测试基准：Playwright 统一测试 9 项检查，全部 4 栈 **9/9 通过，0 console error**
+> 测试基准：Playwright 统一测试 9 项检查，全部 5 栈 **9/9 通过，0 console error**
 
 ---
 
