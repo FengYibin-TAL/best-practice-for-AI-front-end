@@ -40,6 +40,34 @@ shadcn/ui 的核心理念：**把组件代码复制进你的仓库**，而不是
 - 无需查文档——代码本身就是文档
 - 与 MUI/AntD 的黑盒 npm 包形成鲜明对比
 
+### 2.2.1 shadcn/ui 的真实风险
+
+copy-in 把责任从库作者转移给了你，这不是没有代价的：
+
+**风险 1：组件升级需要手动 merge**
+
+shadcn 官方修了 bug 或改了交互，你不会自动收到。要更新必须：
+1. 重新 `npx shadcn add dialog` 覆盖
+2. 把你之前对该文件的改动手动 merge 回去
+
+改动越多，merge 越痛。这是 copy-in 模式固有的成本，无法消除。
+
+**风险 2：复杂组件覆盖不足**
+
+shadcn 只有约 50 个基础组件。以下业务常见需求**没有或很简陋**：
+- DatePicker / RangePicker（带国际化、农历）
+- 复杂 Table（虚拟滚动、列拖拽、树形数据）
+- Upload（进度条、裁剪、预览）
+- 完整 Form 校验体系
+
+遇到这些，要么自建，要么引入其他专项库（如 TanStack Table），引入后就又回到了"外部依赖"的问题。
+
+**风险 3：团队需要有维护意愿**
+
+组件代码在仓库里意味着：它是你的技术债，不是别人的。如果团队对这些文件放任自流（各处随意修改、无人 review），最终会变成一堆 fork 出来没人能看懂的代码，比黑盒组件库更难维护。
+
+**适合 shadcn 的团队特征**：组件数量需求有限、有 UI 定制需求、以 AI 辅助开发为主、团队有意愿对组件层代码负责。
+
 ### 2.3 可测量的数据证据
 
 | 维度 | React+Tailwind | Vue SFC | MUI | AntD |
@@ -147,5 +175,5 @@ export interface Star {
 
 ---
 
-*完整对比数据见 `demo/report/comparison-report.md`*  
+*完整对比数据见 `docs/experiment-reports/comparison-report.md`*  
 *测试脚本见 `demo/_test/test.mjs`（Playwright 9 项，4 栈全通过）*
