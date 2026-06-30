@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Tailwind v4 source scanning — include all sub-app src dirs */
+@source "../../level1/src/**/*.tsx";
+@source "../../level2/src/**/*.tsx";
+@source "../../level3/src/**/*.tsx";

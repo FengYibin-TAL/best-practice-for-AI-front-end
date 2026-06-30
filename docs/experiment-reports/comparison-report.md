@@ -97,7 +97,52 @@
 
 ---
 
-## 8. 结论
+## 8. 架构对比：SPA vs 微前端（⑤ react-shadcn-mf）
+
+基于 react-shadcn 拆出的 Module Federation 版本（shell + level1/2/3 共 4 个子应用），实现相同功能，Playwright 9/9 通过。
+
+### 8.1 LOC 对比
+
+| 维度 | SPA react-shadcn | MF react-shadcn-mf | 变化 |
+|-----|------------------|--------------------|------|
+| 总 LOC | 662 | 920 | **+39%** |
+| App 层（shell） | 145（App.tsx） | 339（shell/src 全部） | +134% |
+| 组件层 | 368 | 367（3关组件之和） | ≈持平 |
+| 数据+lib | 149 | 214（shell+3关数据之和） | +44% |
+
+**LOC 增加的原因**：类型定义在各子应用中重复（Star/DragFillConfig 等），中间层 LevelApp.tsx 是新增文件，Shell 与子应用间数据契约（LEVEL_METAS）带来冗余。
+
+### 8.2 Bundle 对比
+
+| 维度 | SPA | MF（首屏 = shell + level1） | MF 理想值（react 真正共享后） |
+|-----|-----|---------------------------|---------------------------|
+| 首屏 JS gzip | 63 KB | 129 KB（+105%） | ~20 KB（-68%） |
+| 总计 JS gzip | 63 KB | 258 KB（+310%） | ~30 KB（-52%） |
+
+> **说明**：当前测量值偏高，因为 `vite preview` 静态模式下各子应用各自携带了完整的 react + react-dom（各 ~57KB）。生产部署（webpack/CDN 模式）中 React singleton shared 会生效，首屏体积可降至约 20 KB，按需加载后续关卡各约 3-5 KB。
+
+### 8.3 AI 可维护性对比
+
+| 场景 | SPA | MF |
+|-----|-----|-----|
+| 定位一个 bug | 在单仓库搜索，AI 有完整上下文 | 需先判断 bug 在 shell 还是哪个 level，上下文边界更清晰但需要额外一步 |
+| 修改星型组件 | 直接改 `src/components/DragFillStar.tsx` | 改 `level1/src/components/DragFillStar.tsx`，隔离清晰，但文件路径更深 |
+| 追踪状态流 | 所有状态在 App.tsx，一个文件看完 | Shell 持有全局状态，props 传入子应用，需跨文件追踪 props 接口 |
+| AI 指令精度 | "修改 level2 的翻牌逻辑" → AI 直接找到文件 | 同样精确，子应用隔离让 AI 上下文更小 |
+
+### 8.4 微前端适用场景分析
+
+本次实验规模（3关，~900 LOC）对微前端来说**太小**——架构开销比业务代码本身还重。微前端的价值体现需要满足：
+
+- 多团队独立开发部署（≥3 个团队）
+- 子应用体积各自 > 100 KB（共享 React 才有规模收益）
+- 明确的业务边界，不需要频繁跨子应用共享组件
+
+**对于 AI 时代的小型/中型项目**：SPA 仍是更优解——代码更少、上下文更连续、AI 修改路径更短。微前端引入的类型重复、props 接口、构建复杂度，在 AI 辅助下不是"透明成本"，而是实际的维护负担。
+
+---
+
+## 9. 结论
 
 **最适合 AI 时代**：**① React + Tailwind + shadcn/ui**
 - 最精简的代码量（662 LOC），纯函数组件 + Tailwind 类名让 AI 生成的每一行可独立理解
@@ -107,6 +152,9 @@
 
 **组件库选择（③④）**：若业务必须用 MUI/AntD，代价是 +40%～+79% LOC 和 +69%～+134% 体积；AntD AI 文档在大模型支持上反而优于 MUI。
 
+**架构选择（SPA vs MF）**：小型项目 MF 带来 +39% LOC 和更高构建复杂度，收益需在多团队/大规模场景下才能显现。AI 时代应首选 SPA，在团队规模/部署需求明确触发后再引入微前端。
+
 ---
 
-*详细数据见 `demo/measurements/`，测试脚本见 `demo/_test/test.mjs`*
+*详细数据见 `docs/experiment-reports/measurements/`，测试脚本见 `demo/_test/test.mjs`*  
+*微前端实现见 `demo/react-shadcn-mf/`，启动方式见 `start-preview.sh`*
