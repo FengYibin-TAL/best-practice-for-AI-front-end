@@ -40,6 +40,38 @@ shadcn/ui 的核心理念：**把组件代码复制进你的仓库**，而不是
 - 无需查文档——代码本身就是文档
 - 与 MUI/AntD 的黑盒 npm 包形成鲜明对比
 
+### 2.2.0 发布模型对比：shadcn vs 传统组件库
+
+这是理解 shadcn 与 MUI/AntD 本质差异的基础，两种模型在每个环节都不同：
+
+| 环节 | MUI / AntD（npm 包） | shadcn/ui（copy-in） |
+|------|---------------------|---------------------|
+| **安装** | `npm install @mui/material` → 进入 node_modules | `npx shadcn add button` → 源码写入 `src/components/ui/` |
+| **代码归属** | 库作者所有，你只能调用 | 复制后是你的代码，可以任意修改 |
+| **版本锁定** | `package.json` 中有版本号，团队共享同一版本 | 没有版本号，每个组件是独立快照，各自独立演进 |
+| **升级方式** | `npm update` 一条命令，自动拉取新版 | 手动重新 `add`，覆盖文件后自行 merge 改动 |
+| **Breaking change** | 升级时可能破坏现有代码，需看 changelog | 你不升级就不会有 breaking change，但也收不到 bug fix |
+| **bundle 构成** | 整个库打进 node_modules，tree-shake 后仍有基础开销 | 只有你 add 进来的组件，其余不存在于项目中 |
+| **样式机制** | MUI：emotion runtime / AntD：cssinjs runtime，运行时注入 | Tailwind 原子类，编译期生成，无运行时开销 |
+| **底层依赖** | 自研 headless 逻辑 | Radix UI（headless，无障碍访问内置） + Tailwind |
+| **TypeScript 类型** | 库提供，跟版本绑定 | 复制进来的文件直接含类型，随你改 |
+| **出了 bug** | 提 issue → 等官方发版 → npm update | 直接改你自己的文件，下午就上线 |
+| **定制样式** | 通过 theme/sx/ConfigProvider 层层覆盖 | 直接改 className，无覆盖层级 |
+
+**本质差异一句话**：MUI/AntD 是你**依赖**的东西，shadcn 是你**拥有**的东西。依赖意味着稳定但受制于人；拥有意味着自由但责任自担。
+
+这个模型差异直接导致了两类不同的长期演进轨迹：
+
+```
+传统 npm 包模式：
+  你的代码 ──调用──▶ node_modules/mui  ──维护──▶ MUI 团队
+  升级收益归你，升级风险也归你（breaking change）
+
+shadcn copy-in 模式：
+  你的代码 ──就是──▶ src/components/ui/  ──初始来源──▶ shadcn 官方
+  官方更新与你无关，除非你主动 re-add
+```
+
 ### 2.2.1 shadcn/ui 的真实风险
 
 copy-in 把责任从库作者转移给了你，这不是没有代价的：
