@@ -12,12 +12,22 @@
 
 ## 方法 A（① react-shadcn / ③ react-mui / ④ react-antd，单次质量）
 每栈采：
-- 功能点通过表（drag-fill/hotspot/quiz/modal/埋点 各 pass/fail）
+- 功能点通过表（drag-fill/hotspot/quiz/modal 各 pass/fail）
 - 修复轮数（到能跑为止，≤2）
 - AI 文档可用性（shadcn→v0 / AntD→llms.txt+MCP / MUI→无）
 - 代码质量与地道性（定性）
 
 日志放 `method-a/<stack>.json`。
 
+## 方法 MF（⑤ react-shadcn-mf，微前端架构对比）
+对比基准为 ① react-shadcn SPA 版本，测量维度：
+- 总 LOC（shell + level1/2/3 之和）vs SPA
+- 各子应用 LOC 分布（shell / 每关 / 数据层）
+- Bundle gzip（首屏 = shell + level1，全量 = 3 关全加载）vs SPA
+- AI 可维护性（定性：bug 定位路径、状态追踪、修改组件路径）
+- 构建复杂度（build 次数、patch 步骤）
+
+数据见 `method-mf/mf-single-shot.md`。
+
 ## 隐变量控制
-固定同一 AI 模型 + 同一 prompt 模板；声明结论模型相关（报告 v4.4 Ch11.4）。
+固定同一 AI 模型 + 同一 prompt 模板；声明结论模型相关。

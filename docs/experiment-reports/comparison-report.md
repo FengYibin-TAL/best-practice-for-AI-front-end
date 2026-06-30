@@ -13,20 +13,29 @@
 | 框架差异（React vs Vue SFC） | Method B：单次快照 + 代码结构分析 | ① vs ② |
 | 组件库差异 | Method A：单次质量快照 | ① vs ③ vs ④ |
 
-**4 个栈**：
+**5 个栈**：
 - ① React 19.2 + Tailwind v4 + shadcn/ui（copy-in）
 - ② Vue 3.5 + Tailwind v4 + shadcn-vue（copy-in）
 - ③ React 19.2 + MUI 7（runtime CSS-in-JS）
 - ④ React 19.2 + Ant Design 5（runtime CSS-in-JS）
+- ⑤ React 19.2 + Tailwind v4（Module Federation 微前端，基于①按关卡拆分）
 
 ---
 
 ## 2. 核心指标一览
 
-4 栈在 Bundle 体积、源码行数、AI 文档支持三个维度的综合表现：
+5 个栈在 Bundle 体积、源码行数、AI 文档支持三个维度的综合表现（⑤ MF 详细架构数据见第 8 节）：
 
 ![4技术栈核心指标一览](images/metrics-overview.png)
-*图：① React+Tailwind 在 LOC 和可维护性上综合最优；② Vue+Tailwind 体积最小；④ AntD AI 文档支持反而最好。*
+*图：① React+Tailwind 在 LOC 和可维护性上综合最优；② Vue+Tailwind 体积最小；④ AntD AI 文档支持反而最好。（图为①-④ SPA 对比，⑤ MF 见第 8 节）*
+
+| 栈 | LOC | Bundle gzip | AI 文档 | 架构 |
+|----|-----|------------|---------|------|
+| ① react-shadcn | **662** | 63 KB | ✅ | SPA |
+| ② vue-shadcn | 732 | **28 KB** | ✅ | SPA |
+| ③ react-mui | 904 | 106 KB | ❌ | SPA |
+| ④ react-antd | 1184 | 146 KB | ✅✅ | SPA |
+| ⑤ react-shadcn-mf | 920（+39%） | 129 KB 首屏（+105%） | ✅ | 微前端 MF |
 
 ---
 
@@ -35,17 +44,20 @@
 ![Bundle 体积对比](measurements/method-a/images/bundle-size.png)
 *图：vue-shadcn 体积最小（29KB），AntD 是 Tailwind 栈的 2.3 倍，runtime CSS-in-JS 是主因。*
 
-| 栈 | JS gzip | 相对① |
-|----|---------|-------|
-| ① react-shadcn | 64 KB | 基准 |
-| ② vue-shadcn | **29 KB** | −55% |
-| ③ react-mui | 108 KB | +69% |
-| ④ react-antd | 150 KB | +134% |
+| 栈 | JS gzip | 相对① | 架构 |
+|----|---------|-------|------|
+| ① react-shadcn | 63 KB | 基准 | SPA |
+| ② vue-shadcn | **28 KB** | −55% | SPA |
+| ③ react-mui | 106 KB | +68% | SPA |
+| ④ react-antd | 146 KB | +132% | SPA |
+| ⑤ react-shadcn-mf（首屏） | 129 KB | +105% | 微前端（shell+level1） |
+| ⑤ react-shadcn-mf（全部加载） | 258 KB | +310% | 微前端（3关全加载） |
 
 **关键发现**：
 - Vue3 框架本身比 React 19 轻约 35%，Tailwind 树摇激进，vue-shadcn 体积最小。
 - MUI 和 AntD 包含 runtime CSS-in-JS（emotion/cssinjs），无法像 Tailwind 一样在编译期消除。
-- AntD 150 KB 是 Tailwind 栈的 2.3 倍，主因是完整组件 + 样式 runtime。
+- AntD 146 KB 是 Tailwind 栈的 2.3 倍，主因是完整组件 + 样式 runtime。
+- MF 版首屏 129 KB 偏高，因 `vite preview` 静态模式下 React 未真正共享；生产部署 React singleton 生效后首屏估算降至 ~20 KB。
 
 ---
 
@@ -54,17 +66,19 @@
 ![源码行数对比](measurements/method-a/images/loc-comparison.png)
 *图：react-shadcn 662 LOC 最精简；react-antd 1183 LOC 是其 1.8 倍，主因是样式全内联 + ModalStack 需纯 div 手写。*
 
-| 栈 | App | 组件（×8） | data+lib | **合计** |
-|----|-----|-----------|---------|---------|
-| ① react-shadcn | 145 | 368 | 149 | **662** |
-| ② vue-shadcn | 175 | 413 | 145 | **733** |
-| ③ react-mui | 143 | 576 | 185 | **904** |
-| ④ react-antd | 237 | 622 | 274 | **1183** |
+| 栈 | App/Shell | 组件 | data+lib | **合计** | 架构 |
+|----|-----------|------|---------|---------|------|
+| ① react-shadcn | 145 | 368 | 149 | **662** | SPA |
+| ② vue-shadcn | 175 | 413 | 145 | **733** | SPA |
+| ③ react-mui | 143 | 576 | 185 | **904** | SPA |
+| ④ react-antd | 237 | 622 | 274 | **1183** | SPA |
+| ⑤ react-shadcn-mf | 339（shell） | 367（3关合计） | 214 | **920** | 微前端 MF |
 
 **关键发现**：
 - ① vs ②：Vue SFC 组件单文件 LOC 稍多（+11%）。`<template>` 比 JSX 略啰嗦，但差距不大。
 - ① vs ③：MUI 组件 LOC +37%。`sx` prop 内联样式比 Tailwind 类名冗长，3D 翻牌必须用内联 style。
 - ① vs ④：AntD 组件 LOC +69%。AntD 无布局组件，ModalStack 需纯 div 实现。
+- ① vs ⑤：MF 版 LOC +39%。增量来自类型定义跨子应用重复、新增 LevelApp 中间层、Shell 与子应用数据契约（LEVEL_METAS）冗余。
 
 ---
 

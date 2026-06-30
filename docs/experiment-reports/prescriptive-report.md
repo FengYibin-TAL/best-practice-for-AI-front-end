@@ -1,15 +1,17 @@
 # AI 时代前端技术栈与代码写法处方报告
 
-> 基于 Epic Labs 复杂 demo 的 4 栈对比实验  
-> 实验日期：2026-06-30 | Playwright 9/9 pass × 4 栈
+> 基于 Epic Labs 复杂 demo 的 5 栈对比实验（含微前端架构）  
+> 实验日期：2026-06-30 | Playwright 9/9 pass × 5 栈
 
 ---
 
 ## TL;DR 结论
 
-**首选：React 19 + Tailwind v4 + shadcn/ui（copy-in）**
+**首选：React 19 + Tailwind v4 + shadcn/ui（SPA）**
 
-原因：最精简的代码（662 LOC）、最好的 AI 可维护性（函数组件 + 原子类 + 仓库内组件）、合理的 bundle（64 KB gzip）。
+原因：最精简的代码（662 LOC）、最好的 AI 可维护性（函数组件 + 原子类 + 仓库内组件）、合理的 bundle（63 KB gzip）。
+
+**微前端（MF）结论**：相同功能微前端版本 LOC +39%（920 LOC），首屏 bundle +105%（129 KB）。小规模项目架构开销大于收益，需在多团队/大规模场景下才值得引入。
 
 ---
 
@@ -175,12 +177,14 @@ Button、Input、Select、Checkbox、Radio、Switch、Slider、Avatar、Badge、
 
 ### 2.3 可测量的数据证据
 
-| 维度 | React+Tailwind | Vue SFC | MUI | AntD |
-|------|:-:|:-:|:-:|:-:|
-| LOC（单次） | **662** | 733 | 904 | 1183 |
-| Bundle gzip | 64KB | **29KB** | 108KB | 150KB |
-| AI 文档 | ✅ | ✅ | ❌ | ✅ |
-| 组件可直接修改 | ✅ | ✅ | ⚠️ | ⚠️ |
+| 维度 | ① React+Tailwind | ② Vue SFC | ③ MUI | ④ AntD | ⑤ MF（react-shadcn-mf） |
+|------|:-:|:-:|:-:|:-:|:-:|
+| LOC（单次） | **662** | 733 | 904 | 1183 | 920（+39% vs ①） |
+| Bundle gzip（首屏） | 63 KB | **28 KB** | 106 KB | 146 KB | 129 KB（preview 模式）|
+| AI 文档 | ✅ | ✅ | ❌ | ✅✅ | ✅ |
+| 组件可直接修改 | ✅ | ✅ | ⚠️ | ⚠️ | ✅ |
+| 架构 | SPA | SPA | SPA | SPA | 微前端 |
+| 构建复杂度 | 低（1次） | 低（1次） | 低（1次） | 低（1次） | 高（4次 + patch） |
 
 ---
 
@@ -250,13 +254,15 @@ export interface Star {
 
 ## 4. 框架选择：React vs Vue SFC
 
-本次实验单次快照 Vue SFC 仅比 React 多 11% LOC，体积更小（29KB vs 64KB）。Vue SFC 不应被轻易否定。
+本次实验单次快照 Vue SFC 仅比 React 多 11% LOC，体积更小（28 KB vs 63 KB）。Vue SFC 不应被轻易否定。
 
 **"AI 反复追加导致 Vue SFC 膨胀"**是一个合理假设，但**尚未被本 demo 证实**。需要专项 Method B 实验验证。
 
 **当前建议**：
 - 新项目纯前端：React + Tailwind
 - 已有 Vue 规范的团队：继续 Vue，但注意控制 SFC 单文件大小（> 200 LOC 时考虑拆分）
+
+**微前端架构对框架选择的影响**：本次 MF 实验基于 React + Tailwind（①）实现，未测试 Vue MF 版本。理论上 Vue 的 SFC 三段式在 MF 子应用隔离场景下不会放大膨胀风险（子应用独立，无共享状态），但也不会改变 Vue SFC 本身的 LOC 特征。
 
 ---
 
@@ -265,9 +271,11 @@ export interface Star {
 若业务必须使用组件库，需清醒认识代价：
 
 ![引入组件库的代价](images/component-cost.png)
-*图：MUI LOC +37%、bundle +69%；AntD LOC +79%、bundle +134%；但 AntD AI 文档支持反而最好。*
+*图：MUI LOC +37%、bundle +68%；AntD LOC +79%、bundle +132%；但 AntD AI 文档支持反而最好。*
 
-**AntD 的反常之处**：虽然代价最大，但 AI 文档支持（6 个 llms.txt + MCP 工具）是 4 栈最好的——对重度依赖 AI 辅助的团队，这是真实优势。
+**AntD 的反常之处**：虽然代价最大，但 AI 文档支持（6 个 llms.txt + MCP 工具）是 4 个 SPA 栈中最好的——对重度依赖 AI 辅助的团队，这是真实优势。
+
+**微前端架构 vs 组件库代价**：相比引入 MUI/AntD，微前端架构带来的 LOC 开销（+39%）处于中间水平（MUI +37%，AntD +79%）。但微前端的代价是**架构复杂度**（构建 × 4、remoteEntry patch、CSS 作用域），而不是组件抽象层的冗余——两种代价性质不同，需结合项目场景权衡。
 
 ---
 
@@ -277,8 +285,11 @@ export interface Star {
 - Vue SFC 在 AI 迭代 5 轮后的膨胀程度
 - 各栈在"需求变更"场景下的可维护性差异
 - 多模型（GPT-4/Gemini）下的生成质量对比
+- 微前端在大规模场景（> 10 子应用、多团队）下的实际收益是否覆盖架构开销
+- 微前端 Vue SFC 版本 vs React MF 版本的对比
 
 ---
 
 *完整对比数据见 `docs/experiment-reports/comparison-report.md`*  
-*测试脚本见 `demo/_test/test.mjs`（Playwright 9 项，4 栈全通过）*
+*测试脚本见 `demo/_test/test.mjs`（Playwright 9 项，5 栈全通过）*  
+*微前端详细数据见 `docs/experiment-reports/measurements/method-mf/mf-single-shot.md`*
