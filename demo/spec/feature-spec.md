@@ -1,5 +1,9 @@
 # Epic Labs 子集 · 功能规格（共享）
 
+> ⚠️ **历史初版规格**：本文件是项目初期的设计契约，已被实际实现超越。
+> 实际 v2 实现：删除了所有埋点、增加了 `flip-match` 第四种星型、扩展为 3 关卡。
+> 当前实现以各栈 `src/data/levels.ts` 为准。
+
 > 4 个栈（① react-shadcn / ② vue-shadcn / ③ react-mui / ④ react-antd）实现同一份功能，用于对比。
 > 数据契约见 `mock-data.ts`，API 全 mock。
 

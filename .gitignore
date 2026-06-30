@@ -7,6 +7,12 @@ node_modules/
 dist/
 .vite/
 
+# Legacy root-level artifacts (generate-report.js was an early Word-doc script,
+# superseded by md-to-pdf-fyb skill; these are intentionally not tracked)
+generate-report.js
+package.json
+package-lock.json
+
 # Logs
 *.log
 npm-debug.log*

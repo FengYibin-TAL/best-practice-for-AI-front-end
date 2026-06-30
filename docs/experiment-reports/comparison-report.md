@@ -32,7 +32,7 @@
 
 ## 3. Bundle 体积对比
 
-![Bundle 体积对比](../measurements/method-a/images/bundle-size.png)
+![Bundle 体积对比](measurements/method-a/images/bundle-size.png)
 *图：vue-shadcn 体积最小（29KB），AntD 是 Tailwind 栈的 2.3 倍，runtime CSS-in-JS 是主因。*
 
 | 栈 | JS gzip | 相对① |
@@ -51,7 +51,7 @@
 
 ## 4. 源码行数对比
 
-![源码行数对比](../measurements/method-a/images/loc-comparison.png)
+![源码行数对比](measurements/method-a/images/loc-comparison.png)
 *图：react-shadcn 662 LOC 最精简；react-antd 1183 LOC 是其 1.8 倍，主因是样式全内联 + ModalStack 需纯 div 手写。*
 
 | 栈 | App | 组件（×8） | data+lib | **合计** |
@@ -70,7 +70,7 @@
 
 ## 5. 框架结构差异（① vs ②）
 
-![框架结构对比](../measurements/method-b/images/framework-structure.png)
+![框架结构对比](measurements/method-b/images/framework-structure.png)
 *图：React 和 Vue 组件树结构几乎对称，主要差异在 App 层的状态管理写法。*
 
 **React+Tailwind（①）特点**：纯函数组件 + JSX，状态逻辑与渲染在同一作用域，Tailwind 类名即文档。
@@ -92,7 +92,7 @@
 
 ## 7. 综合评分
 
-![综合评分](../measurements/method-a/images/stack-comparison.png)
+![综合评分](measurements/method-a/images/stack-comparison.png)
 *图：① 在 LOC/AI生成质量/可维护性综合最优，② 体积最优，③④ 适用于已有企业规范的场景。*
 
 ---

@@ -11,6 +11,9 @@ echo "Building remotes..."
 (cd "$BASE/level3" && npm run build) &
 wait
 
+# Workaround for vite-plugin-federation 1.4.x bug: dynamicLoadingCss receives a
+# string but calls .forEach on it. Wrap the string in an array after each build.
+# Note: uses macOS sed (-i ''). On Linux use: sed -i "s/.../.../g" "$FILE"
 echo "Patching remoteEntry.js (workaround for vite-plugin-federation 1.4.x CSS bug)..."
 for dir in level1 level2 level3; do
   FILE="$BASE/$dir/dist/assets/remoteEntry.js"

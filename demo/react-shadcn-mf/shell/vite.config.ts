@@ -9,6 +9,7 @@ export default defineConfig({
     tailwindcss(),
     federation({
       name: 'shell',
+      // Local preview only — update these URLs for production deployment
       remotes: {
         level1: 'http://localhost:5175/assets/remoteEntry.js',
         level2: 'http://localhost:5176/assets/remoteEntry.js',
