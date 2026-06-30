@@ -40,9 +40,9 @@ shadcn/ui 的核心理念：**把组件代码复制进你的仓库**，而不是
 - 无需查文档——代码本身就是文档
 - 与 MUI/AntD 的黑盒 npm 包形成鲜明对比
 
-### 2.2.0 发布模型对比：shadcn vs 传统组件库
+### 2.2.0 包管理模式对比：shadcn vs 传统组件库
 
-这是理解 shadcn 与 MUI/AntD 本质差异的基础，两种模型在每个环节都不同：
+这是理解 shadcn 与 MUI/AntD 本质差异的基础，两种模式在每个环节都不同：
 
 | 环节 | MUI / AntD（npm 包） | shadcn/ui（copy-in） |
 |------|---------------------|---------------------|
@@ -53,24 +53,57 @@ shadcn/ui 的核心理念：**把组件代码复制进你的仓库**，而不是
 | **Breaking change** | 升级时可能破坏现有代码，需看 changelog | 你不升级就不会有 breaking change，但也收不到 bug fix |
 | **bundle 构成** | 整个库打进 node_modules，tree-shake 后仍有基础开销 | 只有你 add 进来的组件，其余不存在于项目中 |
 | **样式机制** | MUI：emotion runtime / AntD：cssinjs runtime，运行时注入 | Tailwind 原子类，编译期生成，无运行时开销 |
-| **底层依赖** | 自研 headless 逻辑 | Radix UI（headless，无障碍访问内置） + Tailwind |
+| **底层依赖** | 自研 headless 逻辑 | Radix UI（headless，无障碍访问内置）+ Tailwind |
 | **TypeScript 类型** | 库提供，跟版本绑定 | 复制进来的文件直接含类型，随你改 |
 | **出了 bug** | 提 issue → 等官方发版 → npm update | 直接改你自己的文件，下午就上线 |
 | **定制样式** | 通过 theme/sx/ConfigProvider 层层覆盖 | 直接改 className，无覆盖层级 |
 
 **本质差异一句话**：MUI/AntD 是你**依赖**的东西，shadcn 是你**拥有**的东西。依赖意味着稳定但受制于人；拥有意味着自由但责任自担。
 
-这个模型差异直接导致了两类不同的长期演进轨迹：
+#### 私有 Registry：shadcn 独有的企业级能力
 
-```
-传统 npm 包模式：
-  你的代码 ──调用──▶ node_modules/mui  ──维护──▶ MUI 团队
-  升级收益归你，升级风险也归你（breaking change）
+这是 shadcn 包管理模式最容易被忽视的一个维度，也是它与传统 npm 私有包管理的核心分叉点。
 
-shadcn copy-in 模式：
-  你的代码 ──就是──▶ src/components/ui/  ──初始来源──▶ shadcn 官方
-  官方更新与你无关，除非你主动 re-add
+**传统私有组件库的做法**（MUI/AntD 体系下）：
 ```
+内部组件 → 发布到私有 npm registry（如 Verdaccio / 公司 Nexus）
+                ↓
+消费方：npm install @company/design-system
+```
+问题：每次改动必须走完整发版流程（bump version → publish → 各项目 npm update），团队耦合在版本号上，协作摩擦大。
+
+**shadcn 私有 Registry 的做法**：
+```json
+// shadcn.config.json
+{
+  "registries": [
+    {
+      "name": "company",
+      "url": "https://ui.company.com/registry"  // 你自己的 registry 地址
+    }
+  ]
+}
+```
+```bash
+# 消费方直接 add，源码复制进项目，无需发版
+npx shadcn add company/data-grid
+npx shadcn add company/rich-upload
+```
+
+Registry 本质是一个 JSON 文件服务，每个组件是一个 JSON，描述文件列表和依赖。团队维护这个 JSON 端点，消费方 `add` 时拉取源码直接写入仓库，**跳过了 npm publish 整个流程**。
+
+**两种私有组件管理方式对比**：
+
+| | 私有 npm 包 | shadcn 私有 Registry |
+|--|------------|---------------------|
+| 发版流程 | 必须 bump version → publish | 直接更新 JSON，无版本号 |
+| 消费方升级 | `npm update @company/ui` | 重新 `npx shadcn add company/xxx` |
+| 版本一致性 | package.json 强制锁定 | 无约束，各项目独立演进 |
+| 组件定制后升级 | 改了源码就无法通过 npm 升级 | 一样需要手动 merge，但流程更轻 |
+| 适合场景 | 需要强版本管控、多团队强一致 | 组件相对稳定、各团队需要定制空间 |
+| 搭建成本 | 需要维护 npm registry 服务 | 一个静态 JSON 端点即可，可放 CDN |
+
+> **实际含义**：对于有内部设计系统的企业团队，shadcn registry 提供了一种**比发 npm 包更轻、比 git submodule 更灵活**的组件共享方案。代价是失去了版本强一致性的保证。
 
 ### 2.2.1 shadcn/ui 的真实风险
 
