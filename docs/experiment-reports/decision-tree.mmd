@@ -1,13 +1,17 @@
 flowchart TD
-  START["新建 AI 时代前端项目"] --> Q1{"需要复杂组件库？\n（企业中后台 / 现有规范）"}
+  START["新建 AI 时代前端项目"] --> Q0{"项目规模与团队？"}
+  Q0 -->|"多团队独立部署\n各子系统边界清晰"| MF["⑤ 微前端架构\nModule Federation\n+39% LOC / 构建复杂度高\n适合：多团队/大规模"]
+  Q0 -->|单团队 / 中小项目| Q1{"需要复杂组件库？\n（企业中后台/现有规范）"}
   Q1 -->|否| Q2{"框架偏好？"}
-  Q1 -->|MUI规范| MUI["③ React + MUI\n108KB / 904 LOC\nAI文档：❌ llms.txt 404"]
-  Q1 -->|AntD规范| ANTD["④ React + AntD\n150KB / 1183 LOC\nAI文档：✅ 6个llms.txt+MCP"]
-  Q2 -->|React| BEST["① React+Tailwind+shadcn\n64KB / 662 LOC\n🏆 AI时代首选"]
-  Q2 -->|Vue| VUE["② Vue3+Tailwind+shadcn-vue\n29KB / 733 LOC\n✅ 轻量替代"]
+  Q1 -->|MUI规范| MUI["③ React + MUI\n106KB / 904 LOC\nAI文档：❌ 无llms.txt"]
+  Q1 -->|AntD规范| ANTD["④ React + AntD\n146KB / 1184 LOC\nAI文档：✅✅ 6个llms.txt+MCP"]
+  Q2 -->|React| BEST["① React+Tailwind+shadcn\n63KB / 662 LOC\n🏆 AI时代首选"]
+  Q2 -->|Vue| VUE["② Vue3+Tailwind+shadcn-vue\n28KB / 732 LOC\n✅ 轻量替代"]
   BEST --> WARN1["注意：需验证迭代膨胀\n是否符合预期"]
   VUE --> WARN2["注意：SFC迭代膨胀\n待Method B实验验证"]
+  MF --> WARN3["注意：React未共享时\n首屏bundle偏高\n生产部署需配置CDN共享"]
   style BEST fill:#d1fae5,stroke:#059669
   style VUE fill:#dbeafe,stroke:#2563eb
   style MUI fill:#fef9c3,stroke:#ca8a04
   style ANTD fill:#fee2e2,stroke:#dc2626
+  style MF fill:#ffedd5,stroke:#ea580c

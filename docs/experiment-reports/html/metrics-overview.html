@@ -3,104 +3,136 @@
 <head>
 <meta charset="UTF-8">
 <style>
-/* ============================================================
-   rich-doc Design Tokens — 暖色橙棕主题
-   所有 HTML 模板 @import 此文件
-   ============================================================ */
 :root {
-  /* 品牌色 */
-  --color-primary:   #92400e;   /* 深棕   — 标题、边框强调 */
-  --color-accent:    #ea580c;   /* 橙     — 高亮、数字、徽章 */
-  --color-success:   #15803d;   /* 绿     — 好/推荐 */
-  --color-warning:   #ca8a04;   /* 金     — 注意/警告 */
-  --color-danger:    #dc2626;   /* 红     — 坏/风险 */
-
-  /* 背景 */
-  --color-bg:        #fffbeb;   /* 暖白   — 页面背景 */
-  --color-card:      #ffffff;   /* 纯白   — 卡片背景 */
-  --color-muted:     #fef3c7;   /* 浅黄   — 次要区块背景 */
-
-  /* 文字 */
-  --color-text:      #1c1917;   /* 近黑   — 正文 */
-  --color-text-sub:  #78716c;   /* 灰棕   — 副文本、caption */
-
-  /* 成功/危险卡片 */
-  --color-success-bg:  #f0fdf4;
-  --color-success-bd:  #86efac;
-  --color-danger-bg:   #fff1f2;
-  --color-danger-bd:   #fca5a5;
-  --color-warning-bg:  #fefce8;
-  --color-warning-bd:  #fde68a;
-
-  /* 几何 */
-  --radius-sm:   8px;
-  --radius-md:   12px;
-  --radius-lg:   16px;
-  --shadow-sm:   0 1px 4px rgba(0,0,0,0.07);
-  --shadow-md:   0 2px 10px rgba(0,0,0,0.09);
-  --padding-fig: 40px;          /* 图内边距统一值 */
-
-  /* 字体 */
-  --font:        -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
-  --font-title:  700 18px/1.3 var(--font);
-  --font-body:   400 13px/1.6 var(--font);
-  --font-cap:    400 11px/1.4 var(--font);
+  --color-primary: #92400e;
+  --color-accent: #ea580c;
+  --color-success: #15803d;
+  --color-warning: #ca8a04;
+  --color-danger: #dc2626;
+  --color-bg: #fffbeb;
+  --color-card: #ffffff;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font);background:var(--color-bg);padding:40px 48px 44px}
-h1{text-align:center;font-size:20px;font-weight:700;color:var(--color-primary);margin-bottom:28px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.card{background:var(--color-card);border-radius:14px;padding:20px 16px 18px;box-shadow:0 2px 10px rgba(0,0,0,0.09);border-left:5px solid var(--color-accent)}
-.card.best{border-left-color:var(--color-success)}
-.card.warn{border-left-color:var(--color-warning)}
-.card.bad{border-left-color:var(--color-danger)}
-.stack{font-size:11px;font-weight:700;color:var(--color-text-sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
-.metric-row{display:flex;align-items:baseline;gap:6px;margin-bottom:3px}
-.val{font-size:30px;font-weight:800;color:var(--color-primary);line-height:1}
-.unit{font-size:12px;color:var(--color-text-sub);font-weight:600}
-.divider{width:100%;height:1px;background:#fde68a;margin:10px 0}
-.sub{font-size:12px;color:var(--color-text-sub);line-height:1.7}
-.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
-.trophy{background:linear-gradient(90deg,#fbbf24,#f59e0b);color:#fff}
-.green{background:#dcfce7;color:#14532d}
-.yellow{background:#fef9c3;color:#713f12}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-bg); font-family: "PingFang HK", "PingFang SC", "Hiragino Sans GB", sans-serif; padding: 28px 32px; }
+h2 { color: var(--color-primary); font-size: 19px; margin-bottom: 20px; text-align: center; }
+
+.grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+
+.card {
+  background: var(--color-card);
+  border-radius: 12px;
+  padding: 18px 14px;
+  border: 2px solid #e5e7eb;
+  text-align: center;
+  position: relative;
+}
+.card.best { border-color: var(--color-success); background: #f0fdf4; }
+.card.mf   { border-color: var(--color-warning); background: #fffbeb; }
+
+.badge {
+  position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+  background: var(--color-success); color: white;
+  font-size: 10px; padding: 2px 10px; border-radius: 20px; white-space: nowrap;
+}
+.badge.mf-badge { background: var(--color-warning); }
+
+.stack-num { font-size: 22px; font-weight: 800; color: var(--color-accent); }
+.stack-name { font-size: 12px; color: #555; margin: 2px 0 10px; }
+
+.metric { margin: 8px 0; }
+.metric .label { font-size: 10px; color: #888; margin-bottom: 2px; }
+.metric .value { font-size: 16px; font-weight: 700; color: var(--color-primary); }
+.metric .value.best-val { color: var(--color-success); }
+.metric .value.warn-val { color: var(--color-warning); }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 10px; }
+.tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 10px;
+  background: #f3f4f6; color: #555;
+}
+.tag.green { background: #dcfce7; color: var(--color-success); }
+.tag.red   { background: #fee2e2; color: var(--color-danger); }
+.tag.yellow { background: #fef9c3; color: #92400e; }
+.tag.blue  { background: #dbeafe; color: #1e40af; }
+.tag.orange { background: #ffedd5; color: var(--color-accent); }
+
+.arch-label { font-size: 11px; color: var(--color-warning); font-weight: 600; margin-top: 8px; }
 </style>
 </head>
 <body>
-<h1>4 技术栈核心指标一览</h1>
+<h2>5 技术栈核心指标一览</h2>
+
 <div class="grid">
+  <!-- ① -->
   <div class="card best">
-    <div class="stack">① React + Tailwind</div>
-    <div class="metric-row"><span class="val">64</span><span class="unit">KB gzip</span></div>
-    <div class="metric-row"><span class="val">662</span><span class="unit">LOC</span></div>
-    <div class="divider"></div>
-    <div class="sub">AI文档 ✅ llms.txt<br>shadcn copy-in ✅<br>可维护性：高</div>
-    <span class="badge trophy">🏆 AI时代首选</span>
+    <div class="badge">🏆 AI时代首选</div>
+    <div class="stack-num">①</div>
+    <div class="stack-name">react-shadcn</div>
+    <div class="metric"><div class="label">LOC</div><div class="value best-val">662</div></div>
+    <div class="metric"><div class="label">Bundle gzip</div><div class="value">63 KB</div></div>
+    <div class="tag-row">
+      <span class="tag green">Tailwind 原子类</span>
+      <span class="tag green">copy-in</span>
+      <span class="tag green">AI文档 ✅</span>
+    </div>
+    <div class="arch-label">SPA</div>
   </div>
-  <div class="card best">
-    <div class="stack">② Vue3 + Tailwind</div>
-    <div class="metric-row"><span class="val">29</span><span class="unit">KB gzip</span></div>
-    <div class="metric-row"><span class="val">733</span><span class="unit">LOC</span></div>
-    <div class="divider"></div>
-    <div class="sub">AI文档 ✅ vuejs.org<br>体积最小 🏆<br>SFC追加风险 ⚠️</div>
-    <span class="badge green">✅ 轻量替代</span>
+
+  <!-- ② -->
+  <div class="card">
+    <div class="stack-num">②</div>
+    <div class="stack-name">vue-shadcn</div>
+    <div class="metric"><div class="label">LOC</div><div class="value">732</div></div>
+    <div class="metric"><div class="label">Bundle gzip</div><div class="value best-val">28 KB 最小</div></div>
+    <div class="tag-row">
+      <span class="tag blue">Vue SFC</span>
+      <span class="tag green">Tailwind</span>
+      <span class="tag green">AI文档 ✅</span>
+    </div>
+    <div class="arch-label">SPA</div>
   </div>
-  <div class="card warn">
-    <div class="stack">③ React + MUI</div>
-    <div class="metric-row"><span class="val">108</span><span class="unit">KB gzip</span></div>
-    <div class="metric-row"><span class="val">904</span><span class="unit">LOC</span></div>
-    <div class="divider"></div>
-    <div class="sub">AI文档 ❌ 404<br>sx prop 冗余 ⚠️<br>3D需内联style</div>
-    <span class="badge yellow">⚠️ 企业MUI规范</span>
+
+  <!-- ③ -->
+  <div class="card">
+    <div class="stack-num">③</div>
+    <div class="stack-name">react-mui</div>
+    <div class="metric"><div class="label">LOC</div><div class="value warn-val">904 (+37%)</div></div>
+    <div class="metric"><div class="label">Bundle gzip</div><div class="value warn-val">106 KB (+68%)</div></div>
+    <div class="tag-row">
+      <span class="tag yellow">emotion runtime</span>
+      <span class="tag red">AI文档 ❌</span>
+    </div>
+    <div class="arch-label">SPA</div>
   </div>
-  <div class="card bad">
-    <div class="stack">④ React + AntD</div>
-    <div class="metric-row"><span class="val">150</span><span class="unit">KB gzip</span></div>
-    <div class="metric-row"><span class="val">1183</span><span class="unit">LOC</span></div>
-    <div class="divider"></div>
-    <div class="sub">AI文档 ✅ 6个+MCP<br>体积最大 ❌<br>代码量最多 ❌</div>
-    <span class="badge yellow">⚠️ 企业AntD规范</span>
+
+  <!-- ④ -->
+  <div class="card">
+    <div class="stack-num">④</div>
+    <div class="stack-name">react-antd</div>
+    <div class="metric"><div class="label">LOC</div><div class="value warn-val">1184 (+79%)</div></div>
+    <div class="metric"><div class="label">Bundle gzip</div><div class="value warn-val">146 KB (+132%)</div></div>
+    <div class="tag-row">
+      <span class="tag yellow">cssinjs runtime</span>
+      <span class="tag green">AI文档 ✅✅</span>
+    </div>
+    <div class="arch-label">SPA</div>
+  </div>
+
+  <!-- ⑤ MF -->
+  <div class="card mf">
+    <div class="badge mf-badge">微前端 MF</div>
+    <div class="stack-num">⑤</div>
+    <div class="stack-name">react-shadcn-mf</div>
+    <div class="metric"><div class="label">LOC（总计）</div><div class="value warn-val">920 (+39%)</div></div>
+    <div class="metric"><div class="label">首屏 gzip</div><div class="value warn-val">129 KB (+105%)</div></div>
+    <div class="tag-row">
+      <span class="tag orange">Module Fed.</span>
+      <span class="tag green">Tailwind</span>
+      <span class="tag green">AI文档 ✅</span>
+    </div>
+    <div class="arch-label">微前端（4个子应用）</div>
   </div>
 </div>
+
 </body>
 </html>

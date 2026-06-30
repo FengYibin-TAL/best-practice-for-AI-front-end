@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --color-primary: #92400e;
+  --color-accent: #ea580c;
+  --color-success: #15803d;
+  --color-warning: #ca8a04;
+  --color-danger: #dc2626;
+  --color-bg: #fffbeb;
+  --color-card: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-bg); font-family: "PingFang HK", "PingFang SC", "Hiragino Sans GB", sans-serif; padding: 32px; }
+h2 { color: var(--color-primary); font-size: 20px; margin-bottom: 24px; text-align: center; }
+
+.arch { display: flex; flex-direction: column; gap: 16px; max-width: 900px; margin: 0 auto; }
+
+/* Shell */
+.shell-box {
+  background: var(--color-primary);
+  color: white;
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-align: center;
+}
+.shell-box .label { font-size: 13px; opacity: 0.85; margin-bottom: 4px; }
+.shell-box .title { font-size: 18px; font-weight: 700; }
+.shell-box .meta { font-size: 12px; opacity: 0.75; margin-top: 6px; display: flex; justify-content: center; gap: 20px; }
+
+/* Arrow */
+.arrow { text-align: center; color: var(--color-accent); font-size: 20px; line-height: 1; }
+
+/* Remotes */
+.remotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.remote-box {
+  background: var(--color-card);
+  border: 2px solid var(--color-accent);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.remote-box .port { font-size: 11px; color: var(--color-warning); font-weight: 600; margin-bottom: 4px; }
+.remote-box .name { font-size: 15px; font-weight: 700; color: var(--color-primary); margin-bottom: 8px; }
+.remote-box .components { font-size: 12px; color: #666; line-height: 1.7; }
+.remote-box .loc { font-size: 11px; color: var(--color-accent); font-weight: 600; margin-top: 8px; }
+
+/* Props flow */
+.flow-box {
+  background: #fef3c7;
+  border: 1.5px dashed var(--color-warning);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: var(--color-primary);
+  text-align: center;
+}
+.flow-box code { background: white; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 4px; }
+.stat-card { background: var(--color-card); border-radius: 8px; padding: 12px; text-align: center; border: 1px solid #e5e7eb; }
+.stat-card .num { font-size: 22px; font-weight: 800; color: var(--color-accent); }
+.stat-card .unit { font-size: 11px; color: #888; }
+.stat-card .desc { font-size: 12px; color: #555; margin-top: 2px; }
+</style>
+</head>
+<body>
+<h2>⑤ react-shadcn-mf 微前端架构（Module Federation）</h2>
+
+<div class="arch">
+
+  <div class="shell-box">
+    <div class="label">HOST — 主应用壳</div>
+    <div class="title">shell（port 5174）</div>
+    <div class="meta">
+      <span>📦 全局状态（completed / levelIdx / modals）</span>
+      <span>🧩 Header / PageNav / ModalStack / Confetti</span>
+      <span>💾 localStorage</span>
+    </div>
+    <div class="meta" style="margin-top:6px; opacity:0.9">
+      <span>339 LOC</span>
+      <span>React.lazy 动态加载 remote</span>
+      <span>Tailwind CSS 统一生成（@source 扫描全部子应用）</span>
+    </div>
+  </div>
+
+  <div class="flow-box">
+    Shell → React.lazy(() => import('<code>levelN/LevelApp</code>')) → props: <code>completed: Set&lt;string&gt;</code>  <code>onComplete: (starId) =&gt; void</code>
+  </div>
+
+  <div class="arrow">▼ &nbsp;&nbsp;&nbsp;▼ &nbsp;&nbsp;&nbsp;▼</div>
+
+  <div class="remotes">
+    <div class="remote-box">
+      <div class="port">REMOTE · port 5175</div>
+      <div class="name">level1 — 第 1 关</div>
+      <div class="components">
+        🟡 DragFillStar（3片拖填）<br>
+        🔵 HotspotStar（方向热区）
+      </div>
+      <div class="loc">198 LOC</div>
+    </div>
+    <div class="remote-box">
+      <div class="port">REMOTE · port 5176</div>
+      <div class="name">level2 — 第 2 关</div>
+      <div class="components">
+        🟣 FlipMatchStar（翻牌配对）<br>
+        🟢 QuizStar（单选题 · Jupiter）
+      </div>
+      <div class="loc">144 LOC</div>
+    </div>
+    <div class="remote-box">
+      <div class="port">REMOTE · port 5177</div>
+      <div class="name">level3 — 第 3 关</div>
+      <div class="components">
+        🟡 DragFillStar（5片拖填）<br>
+        🔵 HotspotStar（方向热区）<br>
+        🟢 QuizStar（单选题 · Cheetah）
+      </div>
+      <div class="loc">239 LOC</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num">920</div>
+      <div class="unit">LOC 总计</div>
+      <div class="desc">vs SPA 662（+39%）</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">129</div>
+      <div class="unit">KB 首屏 gzip</div>
+      <div class="desc">shell + level1（+105%）</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">4</div>
+      <div class="unit">次独立构建</div>
+      <div class="desc">level1/2/3 + shell</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">9/9</div>
+      <div class="unit">Playwright</div>
+      <div class="desc">0 console error</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

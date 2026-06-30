@@ -47,23 +47,28 @@
   --font-cap:    400 11px/1.4 var(--font);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font);background:var(--color-bg);padding:40px 48px 44px}
-h1{text-align:center;font-size:20px;font-weight:700;color:var(--color-primary);margin-bottom:28px}
-.loop{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap}
-.node{background:var(--color-card);border:2px solid var(--color-accent);border-radius:14px;padding:16px 18px;text-align:center;width:180px;flex-shrink:0}
+body{font-family:var(--font);background:var(--color-bg);padding:36px 40px 40px;max-width:860px}
+h1{text-align:center;font-size:19px;font-weight:700;color:var(--color-primary);margin-bottom:24px}
+/* 两行循环布局 */
+.loop-top{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:0}
+.loop-bottom{display:flex;align-items:center;justify-content:center;flex-direction:row-reverse;gap:0;margin-top:0}
+.loop-sides{display:flex;justify-content:space-between;align-items:center;padding:0 20px}
+.v-arrow{text-align:center;font-size:20px;color:var(--color-accent);line-height:1;padding:4px 0}
+.node{background:var(--color-card);border:2px solid var(--color-accent);border-radius:14px;padding:14px 16px;text-align:center;width:160px;flex-shrink:0}
 .node.hi{background:#fef3c7;border-color:var(--color-primary)}
 .node-title{font-size:13px;font-weight:700;color:var(--color-primary);margin-bottom:4px}
 .node-desc{font-size:11px;color:var(--color-text-sub);line-height:1.5}
-.arrow{font-size:22px;color:var(--color-accent);padding:0 8px;flex-shrink:0}
-.source{text-align:center;margin-top:20px;font-size:11px;color:var(--color-text-sub);font-style:italic}
-.bottom{margin-top:20px;background:#fef3c7;border:1.5px solid #fcd34d;border-radius:12px;padding:14px 20px}
-.bottom-title{font-size:13px;font-weight:700;color:var(--color-primary);margin-bottom:6px}
+.arrow{font-size:20px;color:var(--color-accent);padding:0 6px;flex-shrink:0}
+.source{text-align:center;margin-top:16px;font-size:11px;color:var(--color-text-sub);font-style:italic}
+.bottom{margin-top:16px;background:#fef3c7;border:1.5px solid #fcd34d;border-radius:12px;padding:12px 18px}
+.bottom-title{font-size:13px;font-weight:700;color:var(--color-primary);margin-bottom:5px}
 .bottom-desc{font-size:12px;color:var(--color-text);line-height:1.6}
 </style>
 </head>
 <body>
 <h1>React 马太效应：训练数据量 → AI 生成质量正向循环</h1>
-<div class="loop">
+<!-- 上行：节点1 → 节点2 → 节点3 -->
+<div class="loop-top">
   <div class="node hi">
     <div class="node-title">📦 更多公开代码</div>
     <div class="node-desc">React ~30M 公开项目<br>Vue ~3M · Svelte &lt;500k</div>
@@ -78,7 +83,14 @@ h1{text-align:center;font-size:20px;font-weight:700;color:var(--color-primary);m
     <div class="node-title">⚡ 更高生成质量</div>
     <div class="node-desc">更少幻觉，更好处理<br>边界情况</div>
   </div>
-  <div class="arrow">→</div>
+</div>
+<!-- 两侧竖向箭头 -->
+<div class="loop-sides">
+  <div class="v-arrow">↑</div>
+  <div class="v-arrow">↓</div>
+</div>
+<!-- 下行：节点5 ← 节点4（从右到左） -->
+<div class="loop-bottom">
   <div class="node hi">
     <div class="node-title">🚀 更多 AI 平台采用</div>
     <div class="node-desc">v0/Lovable/Bolt<br>默认输出 React</div>

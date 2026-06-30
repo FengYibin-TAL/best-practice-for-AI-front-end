@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --color-primary: #92400e; --color-accent: #ea580c;
+  --color-success: #15803d; --color-warning: #ca8a04;
+  --color-danger: #dc2626; --color-bg: #fffbeb; --color-card: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-bg); font-family: "PingFang HK","PingFang SC","Hiragino Sans GB",sans-serif; padding: 28px 32px; }
+h2 { color: var(--color-primary); font-size: 19px; margin-bottom: 20px; text-align: center; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th { background: var(--color-primary); color: white; padding: 10px 12px; text-align: center; font-size: 12px; }
+thead th:first-child { text-align: left; }
+tbody tr:nth-child(even) { background: #fef9f0; }
+tbody tr.best-row { background: #f0fdf4; }
+tbody tr.mf-row { background: #fffbeb; border-left: 3px solid var(--color-warning); }
+td { padding: 9px 12px; text-align: center; color: #444; border-bottom: 1px solid #e5e7eb; }
+td:first-child { text-align: left; font-weight: 600; color: var(--color-primary); }
+
+.dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+.dot-green { background: var(--color-success); }
+.dot-yellow { background: var(--color-warning); }
+.dot-red { background: var(--color-danger); }
+
+.score-bar { display: flex; align-items: center; gap: 6px; justify-content: center; }
+.bar { height: 8px; border-radius: 4px; }
+.bar-green { background: var(--color-success); }
+.bar-yellow { background: var(--color-warning); }
+.bar-red { background: var(--color-danger); }
+.bar-blue { background: #3b82f6; }
+.bar-orange { background: var(--color-accent); }
+
+.winner { background: var(--color-success); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; }
+.note { font-size: 11px; color: #888; margin-top: 10px; text-align: center; }
+</style>
+</head>
+<body>
+<h2>5 技术栈综合评分（含微前端架构）</h2>
+<table>
+<thead>
+  <tr>
+    <th>技术栈</th>
+    <th>LOC 精简度</th>
+    <th>Bundle 大小</th>
+    <th>AI 可读性</th>
+    <th>AI 文档支持</th>
+    <th>构建复杂度</th>
+    <th>综合推荐</th>
+  </tr>
+</thead>
+<tbody>
+  <tr class="best-row">
+    <td>① react-shadcn <span class="winner">首选</span></td>
+    <td><div class="score-bar"><div class="bar bar-green" style="width:90px"></div> 662 LOC</div></td>
+    <td><div class="score-bar"><div class="bar bar-green" style="width:63px"></div> 63 KB</div></td>
+    <td>⭐⭐⭐ 高</td>
+    <td>✅ llms.txt</td>
+    <td>🟢 低（1次）</td>
+    <td>🏆 AI时代最优</td>
+  </tr>
+  <tr>
+    <td>② vue-shadcn</td>
+    <td><div class="score-bar"><div class="bar bar-green" style="width:80px"></div> 732 LOC</div></td>
+    <td><div class="score-bar"><div class="bar bar-green" style="width:28px"></div> 28 KB 🏆</div></td>
+    <td>⭐⭐⭐ 高</td>
+    <td>✅ llms.txt</td>
+    <td>🟢 低（1次）</td>
+    <td>✅ 体积最优</td>
+  </tr>
+  <tr>
+    <td>③ react-mui</td>
+    <td><div class="score-bar"><div class="bar bar-yellow" style="width:70px"></div> 904 LOC</div></td>
+    <td><div class="score-bar"><div class="bar bar-yellow" style="width:90px"></div> 106 KB</div></td>
+    <td>⭐⭐ 中</td>
+    <td>❌ 无</td>
+    <td>🟢 低（1次）</td>
+    <td>⚠️ 企业MUI规范</td>
+  </tr>
+  <tr>
+    <td>④ react-antd</td>
+    <td><div class="score-bar"><div class="bar bar-red" style="width:100px"></div> 1184 LOC</div></td>
+    <td><div class="score-bar"><div class="bar bar-red" style="width:100px"></div> 146 KB</div></td>
+    <td>⭐⭐⭐ 高</td>
+    <td>✅✅ 6×llms+MCP</td>
+    <td>🟢 低（1次）</td>
+    <td>⚠️ 企业AntD规范</td>
+  </tr>
+  <tr class="mf-row">
+    <td>⑤ react-shadcn-mf</td>
+    <td><div class="score-bar"><div class="bar bar-orange" style="width:82px"></div> 920 LOC</div></td>
+    <td><div class="score-bar"><div class="bar bar-orange" style="width:100px"></div> 129 KB首屏</div></td>
+    <td>⭐⭐⭐ 高</td>
+    <td>✅ llms.txt</td>
+    <td>🔴 高（4次+patch）</td>
+    <td>🟡 多团队/大规模</td>
+  </tr>
+</tbody>
+</table>
+<p class="note">⑤ MF bundle 为 vite preview 静态模式值；生产部署 React singleton 共享后首屏估算 ~20 KB</p>
+</body>
+</html>

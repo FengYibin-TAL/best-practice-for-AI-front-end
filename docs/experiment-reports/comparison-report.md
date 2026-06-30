@@ -41,8 +41,8 @@
 
 ## 3. Bundle 体积对比
 
-![Bundle 体积对比](measurements/method-a/images/bundle-size.png)
-*图：vue-shadcn 体积最小（29KB），AntD 是 Tailwind 栈的 2.3 倍，runtime CSS-in-JS 是主因。*
+![5栈Bundle体积对比](measurements/method-a/images/bundle-size-all5.png)
+*图：② vue-shadcn 体积最小（28KB）；⑤ MF 首屏 129KB 偏高（preview 模式 React 未共享），全量加载 258KB；生产部署 singleton 生效后首屏估算 ~20KB。*
 
 | 栈 | JS gzip | 相对① | 架构 |
 |----|---------|-------|------|
@@ -63,8 +63,8 @@
 
 ## 4. 源码行数对比
 
-![源码行数对比](measurements/method-a/images/loc-comparison.png)
-*图：react-shadcn 662 LOC 最精简；react-antd 1183 LOC 是其 1.8 倍，主因是样式全内联 + ModalStack 需纯 div 手写。*
+![5栈源码行数对比](measurements/method-a/images/loc-comparison-all5.png)
+*图：① react-shadcn 662 LOC 最精简；④ react-antd 1184 LOC 最多；⑤ MF 总计 920 LOC（+39%），其中 shell 339 + 3关合计 581；MF 增量主要来自类型定义重复和中间层文件。*
 
 | 栈 | App/Shell | 组件 | data+lib | **合计** | 架构 |
 |----|-----------|------|---------|---------|------|
@@ -106,14 +106,17 @@
 
 ## 7. 综合评分
 
-![综合评分](measurements/method-a/images/stack-comparison.png)
-*图：① 在 LOC/AI生成质量/可维护性综合最优，② 体积最优，③④ 适用于已有企业规范的场景。*
+![5栈综合评分](measurements/method-a/images/stack-comparison.png)
+*图：① 综合最优（AI时代首选），② 体积最优，③④ 适用于企业规范场景，⑤ MF 适合多团队/大规模部署场景，小项目架构开销大于收益。*
 
 ---
 
 ## 8. 架构对比：SPA vs 微前端（⑤ react-shadcn-mf）
 
 基于 react-shadcn 拆出的 Module Federation 版本（shell + level1/2/3 共 4 个子应用），实现相同功能，Playwright 9/9 通过。
+
+![MF架构示意图](images/mf-architecture.png)
+*图：Shell 持有全局状态并通过 props 向下传递，3 个 remote 子应用各自只负责对应关卡的星型组件，无自身状态。*
 
 ### 8.1 LOC 对比
 
